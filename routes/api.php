@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TaskListController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\JwtMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +19,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('register', [UserController::class, 'store'])->name('users.store');
+Route::post('login', [UserController::class, 'login'])->name('users.login');
+
+/*middleware mudou para jwt.auth ao invés de jwt.verify, não é preciso fazer
+de registro no kernel do laravel*/
+
+Route::group(['prefix' => 'v1', 'middleware' => 'jwt.auth'], function () {
+    Route::apiResources([
+        'tasklist'  =>  TaskListController::class,
+        'tasks' => TaskController::class
+    ]);
+
+    Route::put('task/close/id', [TaskController::class, 'closeTask'])->name('tasks.closeTask');
+    Route::get('list/task/{id}', [TaskListController::class, 'tasksByList'])->name('tasks.tasksByList');
+    Route::post('completedTaskList', [TaskListController::class, 'completedTaskList'])->name('tasklist.completedTaskList');
+    Route::post('logout', [UserController::class, 'logout'])->name('users.logout');
+});

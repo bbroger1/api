@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Transformers\User;
+namespace App\Transformers\TaskList;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Services\ResponseService;
 
-class UserResource extends JsonResource
+class TaskListResource extends JsonResource
 {
     /**
      * @var
@@ -36,9 +36,10 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => '*********'
+            'user_id' => $this->user_id,
+            'title' => $this->title,
+            //'status' => $this->status == 1 ? 'Feito' : 'À Fazer'
+            'status' => $this->status
         ];
     }
 

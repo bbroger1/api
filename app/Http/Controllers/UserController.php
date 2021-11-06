@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Services\ResponseService;
 use App\Transformers\User\UserResource;
 use App\Transformers\User\UserResourceCollection;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -19,6 +20,31 @@ class UserController extends Controller
         $this->user = $user;
     }
 
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+        try {
+            $token = $this
+                ->user
+                ->login($credentials);
+        } catch (\Throwable | \Exception $e) {
+            return ResponseService::exception('users.login', null, $e);
+        }
+        return response()->json(compact('token'));
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+            $this
+                ->user
+                ->logout($request->input('token'));
+        } catch (\Throwable | \Exception $e) {
+            return ResponseService::exception('users.logout', null, $e);
+        }
+
+        return response(['status' => true, 'msg' => 'Deslogado com sucesso'], 200);
+    }
 
     /**
      * Display a listing of the resource.

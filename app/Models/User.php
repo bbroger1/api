@@ -9,7 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
+//composer require tymon/jwt-auth:dev-develop --prefer-source
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -44,21 +47,38 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function create($fields)
+    /*public function create($fields)
     {
         return parent::create([
             'name' => $fields['name'],
             'email' => $fields['email'],
             'password' => Hash::make($fields['password']),
         ]);
-    }
+    }*/
 
     public function login($credentials)
     {
         if (!$token = JWTAuth::attempt($credentials)) {
-            throw new \Exception('Credencias incorretas, verifique-as e tente novamente.', -404);
+            throw new \Exception('Credenciais incorretas, verifique-as e tente novamente.', -404);
         }
         return $token;
+    }
+
+    public function logout($token)
+    {
+        if (!JWTAuth::invalidate($token)) {
+            throw new \Exception('Erro. Tente novamente.', -404);
+        }
+    }
+
+    public function tasklist()
+    {
+        return $this->hasMany(TaskList::class);
+    }
+
+    public function task()
+    {
+        return $this->hasMany(Task::class);
     }
 
     public function getJWTIdentifier()
