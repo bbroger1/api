@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\StoreTaskRequest;
-use App\Models\Task;
+use App\Models\Tasks;
 use Illuminate\Http\Request;
 use App\Http\Requests\Task\StoreTask;
 use App\Services\ResponseService;
 use App\Transformers\Task\TasksResource;
 use App\Transformers\Task\TasksResourceCollection;
 
-class TaskController extends Controller
+class TasksController extends Controller
 {
     private $tasks;
 
-    public function __construct(Task $tasks)
+    public function __construct(Tasks $tasks)
     {
         $this->tasks = $tasks;
     }
@@ -52,7 +52,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Tasks  $tasks
+     * @param  \App\Models\Tasks  $tasks
      * @return \Illuminate\Http\Response
      */
     public function show($id)

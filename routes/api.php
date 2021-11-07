@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TasksController;
 use App\Http\Controllers\TaskListController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -27,10 +27,10 @@ de registro no kernel do laravel*/
 Route::group(['prefix' => 'v1', 'middleware' => 'jwt.auth'], function () {
     Route::apiResources([
         'tasklist'  =>  TaskListController::class,
-        'tasks' => TaskController::class
+        'tasks' => TasksController::class
     ]);
 
-    Route::put('task/close/id', [TaskController::class, 'closeTask'])->name('tasks.closeTask');
+    Route::put('task/close/id', [TasksController::class, 'closeTask'])->name('tasks.closeTask');
     Route::get('list/task/{id}', [TaskListController::class, 'tasksByList'])->name('tasks.tasksByList');
     Route::post('completedTaskList', [TaskListController::class, 'completedTaskList'])->name('tasklist.completedTaskList');
     Route::post('logout', [UserController::class, 'logout'])->name('users.logout');

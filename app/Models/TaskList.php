@@ -15,7 +15,7 @@ class TaskList extends Model
     {
         //dd(TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get());
         //return auth()->user()->TaskList->sortBy("status");
-        return TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get();
+        return TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
     }
 
     public function user()
@@ -26,8 +26,7 @@ class TaskList extends Model
     public function task()
     {
         return $this->hasMany(
-            'App\Models\Task',
-            'user_id',
+            Tasks::class,
             'user_id',
             'list_id',
             'id'
