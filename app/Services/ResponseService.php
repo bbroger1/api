@@ -77,6 +77,7 @@ class ResponseService
                     }
                     $sentry->captureException($e);
                 }
+
                 return response()->json([
                     'status' => false,
                     'statusCode' => 500,
@@ -85,5 +86,15 @@ class ResponseService
                 ], 500);
                 break;
         }
+    }
+
+    public static function customMessage($route, $id, $msg)
+    {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 404,
+            'error'  => $msg,
+            'url'    => $id != null ? route($route, $id) : route($route)
+        ], 404);
     }
 }

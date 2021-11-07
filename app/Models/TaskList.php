@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\ResponseService;
 
 class TaskList extends Model
 {
@@ -16,6 +17,21 @@ class TaskList extends Model
         //dd(TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get());
         //return auth()->user()->TaskList->sortBy("status");
         return TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
+    }
+
+    public function show($id)
+    {
+        try {
+            if (!$task_list = TaskList::with('user')
+                ->where('id', $id)
+                ->where('user_id', auth()->user()->id)
+                ->first()) {
+                return false;
+            };
+            return $task_list;
+        } catch (\Throwable | \Exception $e) {
+            return ResponseService::exception('tasklist.show', $id, $e);
+        }
     }
 
     public function user()

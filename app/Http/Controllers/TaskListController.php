@@ -15,17 +15,12 @@ class TaskListController extends Controller
 
     public function __construct(TaskList $taskList)
     {
-        $this->taskList = $taskList;
+        $this->tasklist = $taskList;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return new TaskListResourceCollection($this->taskList->index());
+        return new TaskListResourceCollection($this->tasklist->index());
     }
 
     public function create()
@@ -47,15 +42,11 @@ class TaskListController extends Controller
 
     public function show($id)
     {
-        try {
-            $data = $this
-                ->tasklist
-                ->show($id);
-        } catch (\Throwable | \Exception $e) {
-            return ResponseService::exception('tasklist.show', $id, $e);
-        }
+        if (!$list = $this->tasklist->show($id)) {
+            return ResponseService::customMessage('tasklist.show', $id, 'Lista não localizada');
+        };
 
-        return new TaskListResource($data, array('type' => 'show', 'route' => 'tasklist.show'));
+        return new TaskListResource($list, array('type' => 'show', 'route' => 'tasklist.show'));
     }
 
     public function edit(TaskList $taskList)
