@@ -13,12 +13,7 @@ class Tasks extends Model
 
     public function index()
     {
-        //return TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
-
-        dd(auth()->user()->tasks->toSql());
-        return auth()
-            ->user()
-            ->tasks;
+        return Tasks::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
     }
 
     public function store($fields)

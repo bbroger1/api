@@ -27,7 +27,9 @@ class StoreTaskListRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'      => 'required'
+            'title'     => 'required|string|max:50|min:3',
+            'user_id'   => 'required|integer',
+            'status'    => 'required|integer'
         ];
     }
 

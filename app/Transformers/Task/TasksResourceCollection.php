@@ -15,7 +15,15 @@ class TasksResourceCollection extends JsonResource
      */
     public function toArray($request)
     {
-        return ['data' => $this->collection];
+        $response = [];
+        foreach ($this->resource as $task) {
+            $task['status'] = $task['status'] == 1 ? 'Feito' : 'À Fazer';
+            array_push($response, $task);
+        };
+
+        return [
+            'data' => $response,
+        ];
     }
 
     /**

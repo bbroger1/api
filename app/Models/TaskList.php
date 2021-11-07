@@ -34,6 +34,21 @@ class TaskList extends Model
         }
     }
 
+    public function updateList($fields, $id)
+    {
+        $tasklist = $this->find($id)->update($fields);
+        $tasklist = $this->find($id);
+        return $tasklist;
+    }
+
+    public function destroyList($id)
+    {
+        if (!$this->find($id)->delete()) {
+            return false;
+        };
+        return true;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

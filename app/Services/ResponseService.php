@@ -88,13 +88,14 @@ class ResponseService
         }
     }
 
-    public static function customMessage($route, $id, $msg)
+    public static function customMessage($route, $id = null, $msg)
     {
+        $status_code = $id != null ? 404 : 201;
         return response()->json([
-            'status' => false,
-            'statusCode' => 404,
+            'status' => true,
+            'statusCode' => $status_code,
             'error'  => $msg,
             'url'    => $id != null ? route($route, $id) : route($route)
-        ], 404);
+        ], $status_code);
     }
 }
