@@ -18,21 +18,15 @@ class Tasks extends Model
 
     public function store($fields)
     {
-        $list = auth()
-            ->user()
-            ->tasklist->find($fields['list_id']);
+        $list = TaskList::with('user')
+            ->where('id', $fields['list_id'])
+            ->where('user_id', auth()->user()->id)->get();
 
-        if (!$list) {
+        if (count($list) == 0) {
             throw new \Exception('Lista não Encontrada', -404);
         }
 
-        if ($list['user_id'] !== auth()->user()->id) {
-            throw new \Exception('Esta Lista não pertence a este Usuário.', -403);
-        }
-
-        $list->update(['status' => 0]);
-
-        return $list->tasks()->create($fields);
+        return Tasks::create($fields);
     }
 
     public function show($id)

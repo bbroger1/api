@@ -19,33 +19,20 @@ class TasksController extends Controller
         $this->tasks = $tasks;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return new TasksResourceCollection($this->tasks->index());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreTaskRequest $request)
     {
         try {
             $data = $this
                 ->tasks
-                ->store($request->all());
+                ->store($request->validated());
         } catch (\Throwable | \Exception $e) {
             return ResponseService::exception('tasks.store', null, $e);
         }
-
         return new TasksResource($data, array('type' => 'store', 'route' => 'tasks.store'));
     }
 
