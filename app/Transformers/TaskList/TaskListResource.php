@@ -41,6 +41,9 @@ class TaskListResource extends JsonResource
             'status' => $this->status == 1 ? 'Feito' : 'À Fazer',
             'user' => [
                 $this->user
+            ],
+            'tasks' => [
+                $this->task
             ]
         ];
     }

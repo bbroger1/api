@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use function PHPUnit\Framework\isNull;
+
 class Tasks extends Model
 {
     use HasFactory;
@@ -31,12 +33,10 @@ class Tasks extends Model
 
     public function show($id)
     {
-        $show = auth()
-            ->user()
-            ->tasks
-            ->find($id);
-
-        if (!$show) {
+        if (!$show = Tasks::with('user')
+            ->where('user_id', auth()->user()->id)
+            ->where('id', $id)
+            ->first()) {
             throw new \Exception('Nada Encontrado', -404);
         }
 
@@ -112,7 +112,6 @@ class Tasks extends Model
 
     public function tasklist()
     {
-        return $this->belongsToMany(TaskList::class, 'list_id', 'user_id');
-        // return $this->belongsTo('App\Tasks', 'list_id', 'id');
+        return $this->belongsToMany(Tasks::class, 'id', 'list_id');
     }
 }

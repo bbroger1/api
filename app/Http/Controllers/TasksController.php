@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Models\Tasks;
 use Illuminate\Http\Request;
-use App\Http\Requests\Task\StoreTask;
 use App\Services\ResponseService;
 use App\Transformers\Task\TasksResource;
 use App\Transformers\Task\TasksResourceCollection;
@@ -36,12 +35,6 @@ class TasksController extends Controller
         return new TasksResource($data, array('type' => 'store', 'route' => 'tasks.store'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tasks  $tasks
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         try {

@@ -37,11 +37,14 @@ class TaskListController extends Controller
 
     public function show($id)
     {
-        if (!$list = $this->tasklist->show($id)) {
-            return ResponseService::customMessage('tasklist.show', $id, 'Lista não localizada');
-        };
-
-        return new TaskListResource($list, array('type' => 'show', 'route' => 'tasklist.show'));
+        try {
+            $data = $this
+                ->tasklist
+                ->show($id);
+        } catch (\Throwable | \Exception $e) {
+            return ResponseService::exception('tasklist.show', $id, $e);
+        }
+        return new TaskListResource($data, array('type' => 'show', 'route' => 'tasklist.show'));
     }
 
     public function update(StoreTaskListRequest $request, $id)

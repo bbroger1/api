@@ -21,17 +21,13 @@ class TaskList extends Model
 
     public function show($id)
     {
-        try {
-            if (!$task_list = TaskList::with('user')
-                ->where('id', $id)
-                ->where('user_id', auth()->user()->id)
-                ->first()) {
-                return false;
-            };
-            return $task_list;
-        } catch (\Throwable | \Exception $e) {
-            return ResponseService::exception('tasklist.show', $id, $e);
+        if (!$show = TaskList::with(['user', 'task'])
+            ->where('user_id', auth()->user()->id)
+            ->where('id', $id)
+            ->first()) {
+            throw new \Exception('Nada Encontrado', -404);
         }
+        return $show;
     }
 
     public function updateList($fields, $id)
@@ -56,11 +52,6 @@ class TaskList extends Model
 
     public function task()
     {
-        return $this->hasMany(
-            Tasks::class,
-            'user_id',
-            'list_id',
-            'id'
-        );
+        return $this->hasMany(Tasks::class, 'list_id', 'id');
     }
 }
