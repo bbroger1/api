@@ -14,7 +14,6 @@ class TaskList extends Model
 
     public function index()
     {
-        //dd(TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get());
         //return auth()->user()->TaskList->sortBy("status");
         return TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
     }
@@ -39,7 +38,11 @@ class TaskList extends Model
 
     public function destroyList($id)
     {
-        if (!$this->find($id)->delete()) {
+        $taskList = TaskList::where('user_id', auth()->user()->id)
+            ->where('id', $id)
+            ->first();
+
+        if (!$taskList->delete()) {
             return false;
         };
         return true;

@@ -15,7 +15,11 @@ class Tasks extends Model
 
     public function index()
     {
-        return Tasks::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
+        return Tasks::with('user')
+            ->where('user_id', auth()->user()->id)
+            ->orderBy('status')
+            ->get()
+            ->all();
     }
 
     public function store($fields)
@@ -43,40 +47,12 @@ class Tasks extends Model
         return $show;
     }
 
-    public function tasksByList($listId)
-    {
-        $tasks = Auth()
-            ->user()
-            ->tasks->where('list_id', '=', $listId)->get();
-
-        return $tasks;
-    }
-
-    public function closeTask($id)
-    {
-        $task = $this->show($id);
-        $task->update(['status' => 1]);
-
-        $list = Auth()
-            ->user()
-            ->tasklist->find($task['list_id']);
-
-        $taskOpen = Auth()
-            ->user()
-            ->tasks
-            ->where('list_id', '=', $task['list_id'])
-            ->where('status', 0)
-            ->get();
-
-        if (count($taskOpen) === 0) {
-            $list->update(['status' => 1]);
-        }
-        return $task;
-    }
-
     public function updateTask($fields, $id)
     {
-        $task = $this->show($id);
+        $task = Tasks::with('user')
+            ->where('user_id', auth()->user()->id)
+            ->where('id', $id)
+            ->first();
 
         $task->update($fields);
         return $task;
@@ -84,23 +60,44 @@ class Tasks extends Model
 
     public function destroyTask($id)
     {
-        $task = $this->show($id);
-        $task->delete();
+        $task = Tasks::where('id', $id)
+            ->where('user_id', auth()->user()->id)
+            ->first();
 
-        $list = Auth()
-            ->user()
-            ->tasklist->find($task['list_id']);
+        if (!$task) {
+            return false;
+        };
 
-        $taskOpen = Auth()
-            ->user()
-            ->tasks
-            ->where('list_id', '=', $task['list_id'])
-            ->where('status', 0)
+        if (!$task->delete()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function tasksByList($listId)
+    {
+        $tasks = Tasks::where('list_id', '=', $listId)
+            ->where('user_id', auth()->user()->id)
             ->get();
 
-        if (count($taskOpen) === 0) {
-            $list->update(['status' => 1]);
+        if (count($tasks) == 0) {
+            return false;
         }
+        return $tasks;
+    }
+
+    //1 = feito e 2 = à fazer
+    public function closeTask($id)
+    {
+        $task = Tasks::where('id', $id)
+            ->where('user_id', auth()->user()->id)
+            ->first();
+
+        if (!$task) {
+            return false;
+        }
+
+        $task->update(['status' => 1]);
 
         return $task;
     }

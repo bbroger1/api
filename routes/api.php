@@ -30,8 +30,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'jwt.auth'], function () {
         'tasks' => TasksController::class
     ]);
 
-    Route::put('task/close/id', [TasksController::class, 'closeTask'])->name('tasks.closeTask');
-    Route::get('list/task/{id}', [TaskListController::class, 'tasksByList'])->name('tasks.tasksByList');
+    Route::put('task/close/{id}', [TasksController::class, 'closeTask'])->name('tasks.closeTask');
+    Route::get('tasklist/{id}/tasks', [TasksController::class, 'tasksByList'])->name('tasks.tasksByList');
     Route::post('completedTaskList', [TaskListController::class, 'completedTaskList'])->name('tasklist.completedTaskList');
     Route::post('logout', [UserController::class, 'logout'])->name('users.logout');
 });

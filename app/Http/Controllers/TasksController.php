@@ -48,56 +48,12 @@ class TasksController extends Controller
         return new TasksResource($data, array('type' => 'show', 'route' => 'tasks.show'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Tasks  $tasks
-     * @return \Illuminate\Http\Response
-     */
-    public function tasksByList($id)
+    public function update(StoreTaskRequest $request, $id)
     {
         try {
             $data = $this
                 ->tasks
-                ->tasksByList($id);
-        } catch (\Throwable | \Exception $e) {
-            return ResponseService::exception('tasks.tasksByList', $id, $e);
-        }
-
-        return new TasksResourceCollection($data);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Tasks  $tasks
-     * @return \Illuminate\Http\Response
-     */
-    public function closeTask($id)
-    {
-        try {
-            $data = $this
-                ->tasks
-                ->closeTask($id);
-        } catch (\Throwable | \Exception $e) {
-            return ResponseService::exception('tasks.closeTask', $id, $e);
-        }
-
-        return new TasksResource($data, array('type' => 'update', 'route' => 'tasks.closeTask'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        try {
-            $data = $this
-                ->tasks
-                ->updateTask($request->all(), $id);
+                ->updateTask($request->validated(), $id);
         } catch (\Throwable | \Exception $e) {
             return ResponseService::exception('tasks.update', $id, $e);
         }
@@ -105,21 +61,36 @@ class TasksController extends Controller
         return new TasksResource($data, array('type' => 'update', 'route' => 'tasks.update'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Tasks  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        try {
-            $data = $this
-                ->tasks
-                ->destroyTask($id);
-        } catch (\Throwable | \Exception $e) {
-            return ResponseService::exception('tasks.destroy', $id, $e);
-        }
-        return new TasksResource($data, array('type' => 'destroy', 'route' => 'tasks.destroy'));
+        if (!$this
+            ->tasks
+            ->destroyTask($id)) {
+            return ResponseService::customMessage('tasks.destroy', $id, 'Tarefa não localizada');
+        };
+
+        return ResponseService::customMessage('tasklist.index', $id = null, 'Tarefa excluída com sucesso');
+    }
+
+    public function tasksByList($id)
+    {
+        if (!$data = $this
+            ->tasks
+            ->tasksByList($id)) {
+            return ResponseService::customMessage('tasks.tasksByList', $id, 'Lista não possui tarefas');
+        };
+
+        return new TasksResourceCollection($data);
+    }
+
+    public function closeTask($id)
+    {
+        if (!$data = $this
+            ->tasks
+            ->closeTask($id)) {
+            return ResponseService::customMessage('tasklist.index', $id, 'Tarefa não localizada');
+        };
+
+        return new TasksResource($data, array('type' => 'update', 'route' => 'tasks.closeTask'));
     }
 }
