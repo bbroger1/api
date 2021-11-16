@@ -28,9 +28,8 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'title'     => 'required|string|min:3|max:50',
-            'user_id'   => 'required|integer',
+            'status'    => 'required|integer',
             'list_id'   => 'required|integer',
-            'status'    => 'required|string'
         ];
     }
 
@@ -45,11 +44,11 @@ class StoreTaskRequest extends FormRequest
 
         if ($validator->fails()) {
             throw new HttpResponseException(response()->json([
-                'msg'   => 'Ops! Algum campo obrigatório não foi preenchido.',
+                'message'   => 'Ops! Algo inesperado aconteceu, tente novamente.',
                 'status' => false,
                 'errors'    => $validator->errors(),
                 'url'    => route('tasks.store')
-            ], 403));
+            ], 404));
         }
     }
 }

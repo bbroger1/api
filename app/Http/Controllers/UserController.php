@@ -30,7 +30,7 @@ class UserController extends Controller
         } catch (\Throwable | \Exception $e) {
             return ResponseService::exception('users.login', null, $e);
         }
-        return response()->json(compact('token'));
+        return response(['status' => true, 'message' => $token], 200);
     }
 
     public function logout(Request $request)
@@ -43,35 +43,9 @@ class UserController extends Controller
             return ResponseService::exception('users.logout', null, $e);
         }
 
-        return response(['status' => true, 'msg' => 'Deslogado com sucesso'], 200);
+        return response(['status' => true, 'message' => 'Deslogado com sucesso'], 200);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreUserRequest $request)
     {
         try {
@@ -87,50 +61,5 @@ class UserController extends Controller
         }
 
         return new UserResource($user, array('type' => 'store', 'route' => 'users.store'));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

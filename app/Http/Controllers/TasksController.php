@@ -32,6 +32,7 @@ class TasksController extends Controller
         } catch (\Throwable | \Exception $e) {
             return ResponseService::exception('tasks.store', null, $e);
         }
+
         return new TasksResource($data, array('type' => 'store', 'route' => 'tasks.store'));
     }
 

@@ -16,28 +16,28 @@ class ResponseService
             case 'store':
                 return [
                     'status' => true,
-                    'msg'    => 'Dado inserido com sucesso',
+                    'message'    => 'Dado inserido com sucesso',
                     'url'    => route($route)
                 ];
                 break;
             case 'show':
                 return [
                     'status' => true,
-                    'msg'    => 'Requisição realizada com sucesso',
+                    'message'    => 'Requisição realizada com sucesso',
                     'url'    => $id != null ? route($route, $id) : route($route)
                 ];
                 break;
             case 'update':
                 return [
                     'status' => true,
-                    'msg'    => 'Dados Atualizado com sucesso',
+                    'message'    => 'Dados Atualizado com sucesso',
                     'url'    => $id != null ? route($route, $id) : route($route)
                 ];
                 break;
             case 'destroy':
                 return [
                     'status' => true,
-                    'msg'    => 'Dado excluido com sucesso',
+                    'message'    => 'Dado excluido com sucesso',
                     'url'    => $id != null ? route($route, $id) : route($route)
                 ];
                 break;
@@ -92,7 +92,7 @@ class ResponseService
     {
         $status_code = $id != null ? 404 : 201;
         return response()->json([
-            'status' => true,
+            'status' => $status_code == 404 ? false : true,
             'statusCode' => $status_code,
             'error'  => $msg,
             'url'    => $id != null ? route($route, $id) : route($route)

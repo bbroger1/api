@@ -36,7 +36,7 @@ class TasksResourceCollection extends JsonResource
     {
         return [
             'status' => true,
-            'msg'    => 'Listando dados',
+            'message'    => 'Listando dados',
             'url'    => route('tasks.index')
         ];
     }

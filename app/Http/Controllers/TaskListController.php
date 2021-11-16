@@ -24,13 +24,9 @@ class TaskListController extends Controller
 
     public function store(StoreTaskListRequest $request)
     {
-        try {
-            $data = $this
-                ->tasklist
-                ->create($request->validated());
-        } catch (\Throwable | \Exception $e) {
-            return ResponseService::exception('tasklist.store', null, $e);
-        }
+        if (!$data = $this->tasklist->createList($request->all())) {
+            return ResponseService::customMessage('tasklist.index', $id = null, 'Não foi possível criar a lista');
+        };
 
         return new TaskListResource($data, array('type' => 'store', 'route' => 'tasklist.store'));
     }

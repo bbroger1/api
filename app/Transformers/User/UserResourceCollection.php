@@ -29,7 +29,7 @@ class UserResourceCollection extends ResourceCollection
     {
         return [
             'status' => true,
-            'msg'    => 'Listando dados',
+            'message'    => 'Listando dados',
             'url'    => route('users.index')
         ];
     }

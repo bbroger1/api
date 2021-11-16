@@ -5,6 +5,8 @@ namespace App\Transformers\TaskList;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Services\ResponseService;
 
+use function PHPUnit\Framework\isEmpty;
+
 class TaskListResource extends JsonResource
 {
     /**
@@ -39,12 +41,7 @@ class TaskListResource extends JsonResource
             'user_id' => $this->user_id,
             'title' => $this->title,
             'status' => $this->status == 1 ? 'Feito' : 'À Fazer',
-            'user' => [
-                $this->user
-            ],
-            'tasks' => [
-                $this->task
-            ]
+            'task' => []
         ];
     }
 

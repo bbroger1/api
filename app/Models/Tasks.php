@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use function PHPUnit\Framework\isNull;
-
 class Tasks extends Model
 {
     use HasFactory;
@@ -24,6 +22,8 @@ class Tasks extends Model
 
     public function store($fields)
     {
+        $fields['user_id'] = auth()->user()->id;
+
         $list = TaskList::with('user')
             ->where('id', $fields['list_id'])
             ->where('user_id', auth()->user()->id)->get();
@@ -97,7 +97,11 @@ class Tasks extends Model
             return false;
         }
 
-        $task->update(['status' => 1]);
+        if ($task['status'] == 1) {
+            $task->update(['status' => 2]);
+        } else {
+            $task->update(['status' => 1]);
+        }
 
         return $task;
     }

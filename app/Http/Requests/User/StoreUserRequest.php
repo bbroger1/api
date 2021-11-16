@@ -30,8 +30,8 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'email'     => 'unique:users,email|email|required',
-            'name'      => 'required|string',
-            'password'  => 'required|string'
+            'name'      => 'required|string|min:3',
+            'password'  => 'required|string|min:6|confirmed'
         ];
     }
 
@@ -46,7 +46,7 @@ class StoreUserRequest extends FormRequest
     {
         if ($validator->fails()) {
             throw new HttpResponseException(response()->json([
-                'msg'   => 'Ops! Algum campo obrigatório não foi preenchido.',
+                'message'   => 'Ops! Algo inesperado aconteceu, tente novamente.',
                 'status' => false,
                 'errors'    => $validator->errors(),
                 'url'    => route('users.store')

@@ -15,12 +15,22 @@ class TaskList extends Model
     public function index()
     {
         //return auth()->user()->TaskList->sortBy("status");
-        return TaskList::with('user')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
+        return TaskList::with('task')->where('user_id', auth()->user()->id)->orderBy('status')->get()->all();
+    }
+
+    public function createList($fields)
+    {
+        $fields['user_id'] = auth()->user()->id;
+
+        if (!$taskList = TaskList::create($fields)) {
+            return false;
+        }
+        return $taskList;
     }
 
     public function show($id)
     {
-        if (!$show = TaskList::with(['user', 'task'])
+        if (!$show = TaskList::with(['task'])
             ->where('user_id', auth()->user()->id)
             ->where('id', $id)
             ->first()) {

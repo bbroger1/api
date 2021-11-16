@@ -28,7 +28,6 @@ class StoreTaskListRequest extends FormRequest
     {
         return [
             'title'     => 'required|string|max:50|min:3',
-            'user_id'   => 'required|integer',
             'status'    => 'required|integer'
         ];
     }
@@ -42,14 +41,13 @@ class StoreTaskListRequest extends FormRequest
 
     public function withValidator($validator)
     {
-
         if ($validator->fails()) {
             throw new HttpResponseException(response()->json([
-                'msg'   => 'Ops! Algum campo obrigatório não foi preenchido.',
+                'message'   => 'Ops! Algo inesperado aconteceu, tente novamente.',
                 'status' => false,
                 'errors'    => $validator->errors(),
                 'url'    => route('tasklist.store')
-            ], 403));
+            ], 404));
         }
     }
 }
