@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Models\TaskList;
 use App\Models\Tasks;
 use Illuminate\Http\Request;
 use App\Services\ResponseService;
@@ -86,12 +87,16 @@ class TasksController extends Controller
 
     public function closeTask($id)
     {
-        if (!$data = $this
+        if (!$task = $this
             ->tasks
             ->closeTask($id)) {
             return ResponseService::customMessage('tasklist.index', $id, 'Tarefa não localizada');
         };
 
-        return new TasksResource($data, array('type' => 'update', 'route' => 'tasks.closeTask'));
+        $data = TaskList::with('task')
+            ->where('user_id', auth()->user()->id)
+            ->get();
+
+        return new TasksResourceCollection($data, array('type' => 'update', 'route' => 'tasks.closeTask'));
     }
 }
